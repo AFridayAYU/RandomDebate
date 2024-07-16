@@ -11,7 +11,7 @@ function Main() {
         <button onClick={() => navigate('/Secondpage')}>
           토론방 만들기
         </button>
-        <button>
+        <button onClick={() => navigate('/Thirdpage')}>
           토론방 참여
         </button>
       </div>
