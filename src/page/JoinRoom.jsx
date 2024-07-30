@@ -1,9 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import BackButton from '../components/BackButton';
 import { createClient } from '@supabase/supabase-js';
+import { useNavigate } from 'react-router-dom';
 
 function Thirdpage() {
     const codeInputRef = useRef();
+    const navigate = useNavigate();
+
 
     function onClick() {
         const supabase = createClient("https://dyjdsfiutbdavklmudjw.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5amRzZml1dGJkYXZrbG11ZGp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMTYyOTE3OCwiZXhwIjoyMDM3MjA1MTc4fQ.qD5MV7L_8IFvbDa27t2Trk0YJdtYPRoflywcuwGi8XI")
@@ -16,14 +19,19 @@ function Thirdpage() {
                 // alert("성공")
                 const channel = supabase.channel(result.data[0].id);
                 channel.subscribe((status) => {
-                    if (status !== 'SUBSCRIBED') return;
+                    channel.on(
+                        'broadcast',
+                        { event: 'topic' },
+                        (payload) => {
+                            console.log(payload);
+                        }
+                    );
+                    channel.send({
+                        type: 'broadcast',
+                        event: 'connect',
+                        payload: { message: 'CONNECT' },
+                    });
                 });
-                
-                // channel.send({
-                //     type: 'broadcast',
-                //     event: 'connect',
-                //     payload: { message: 'hello, world' },
-                // });
             }
         })
     }
