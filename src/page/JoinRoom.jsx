@@ -13,7 +13,17 @@ function Thirdpage() {
                 alert("존재하지 않는 방입니다.")
             }
             else {
-                alert("성공")
+                // alert("성공")
+                const channel = supabase.channel(result.data[0].id);
+                channel.subscribe((status) => {
+                    if (status !== 'SUBSCRIBED') return;
+                });
+                
+                // channel.send({
+                //     type: 'broadcast',
+                //     event: 'connect',
+                //     payload: { message: 'hello, world' },
+                // });
             }
         })
     }
