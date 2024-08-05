@@ -6,6 +6,8 @@ import ShowTeam from "../components/ShowTeam";
 
 function Thirdpage() {
     const [isStarted, setIsStarted] = useState(false);
+    const [team, setTeam] = useState(0);
+    const [topic, setTopic] = useState("");
     const codeInputRef = useRef();
     const navigate = useNavigate();
 
@@ -25,7 +27,9 @@ function Thirdpage() {
                         'broadcast',
                         { event: 'topic' },
                         (payload) => {
-                            console.log(payload);
+                            const data = payload.payload.message;
+                            setTeam(data.team);
+                            setTopic(data.topic);
                         }
                     );
                     channel.send({
@@ -43,7 +47,8 @@ function Thirdpage() {
         {isStarted ? (
             <div>
                 <h2>토론 주제</h2>
-                <ShowTeam isPros={Math.floor(Math.random() * 2)} />
+                <h2>{topic}</h2>
+                <ShowTeam team={team} />
             </div>
 
         ):(
