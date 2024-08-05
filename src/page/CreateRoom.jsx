@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../App';
 import BackButton from '../components/BackButton';
-import { createClient } from '@supabase/supabase-js';
-import { useNavigate } from 'react-router-dom';
-import ShowTeam from "../components/ShowTeam";
 
-function Secondpage() {
-    const [isStarted, setIsStarted] = useState(false);
-    const [team, setTeam] = useState(0);
-    const [topic, setTopic] = useState("");
+function CreateRoom() {
     const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
-    const navigate = useNavigate();
+    const {setPage, setTeam, setTopic, supabase} = useContext(AppContext);
 
     useEffect(() => {
         console.log('생성');
-        const supabase = createClient("https://dyjdsfiutbdavklmudjw.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5amRzZml1dGJkYXZrbG11ZGp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMTYyOTE3OCwiZXhwIjoyMDM3MjA1MTc4fQ.qD5MV7L_8IFvbDa27t2Trk0YJdtYPRoflywcuwGi8XI")
         supabase.from('room_list').insert({id: code, start: false}).then((err) => {
             const channel = supabase.channel(code);
             
@@ -43,7 +37,7 @@ function Secondpage() {
                                 topic : selectedTopic
                             } },
                         }).then((result) => {
-                            if (result === "ok") setIsStarted(true);
+                            if (result === "ok") setPage("ready");
                         });
                     }
                 }
@@ -57,23 +51,11 @@ function Secondpage() {
     }, []);
     return (
         <>
-        {isStarted ?
-            <div>
-                <h2>토론 주제</h2>
-                <h2>{topic}</h2>
-                <ShowTeam team={team} />
-            </div>
-            :
-            <>
-            <h2>초대코드</h2>
-            <div>
-                {code}
-            </div>
-            <BackButton />
-        </>
-        }
+        <h2>초대코드</h2>
+        {code}
+        <BackButton />
         </>
     )
 }
 
-export default Secondpage;
+export default CreateRoom;

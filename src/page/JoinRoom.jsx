@@ -1,19 +1,13 @@
-import React, { useState, useRef } from 'react';
-import BackButton from '../components/BackButton';
-import { createClient } from '@supabase/supabase-js';
-import { useNavigate } from 'react-router-dom';
-import ShowTeam from "../components/ShowTeam";
+import React, { useRef, useContext } from 'react';
+import BackButton from '../components/BackButton';;
+import { AppContext } from '../App';
 
-function Thirdpage() {
-    const [isStarted, setIsStarted] = useState(false);
-    const [team, setTeam] = useState(0);
-    const [topic, setTopic] = useState("");
+function JoinRoom() {
     const codeInputRef = useRef();
-    const navigate = useNavigate();
+    const {setPage, setTeam, setTopic, supabase} = useContext(AppContext);
 
 
     function onClick() {
-        const supabase = createClient("https://dyjdsfiutbdavklmudjw.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5amRzZml1dGJkYXZrbG11ZGp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMTYyOTE3OCwiZXhwIjoyMDM3MjA1MTc4fQ.qD5MV7L_8IFvbDa27t2Trk0YJdtYPRoflywcuwGi8XI")
         supabase.from('room_list').select('*').eq('id', codeInputRef.current.value).then((result) => {
             console.log(result);
             if (result.data.length === 0) {
@@ -38,30 +32,18 @@ function Thirdpage() {
                         payload: { message: 'CONNECT' },
                     });
                 });
-                setIsStarted(true);
+                setPage("ready");
             }
         })
     }
-    return(
+    return (
         <>
-        {isStarted ? (
-            <div>
-                <h2>토론 주제</h2>
-                <h2>{topic}</h2>
-                <ShowTeam team={team} />
-            </div>
-
-        ):(
-            <div>
         <h2>코드입력</h2>
         <input type="text" maxlength="6" ref={codeInputRef}/>
         <button onClick={onClick}>시작</button>
         <BackButton/>
-        </div>
-    )}
-
         </>
     )
 }
 
-export default Thirdpage;
+export default JoinRoom;

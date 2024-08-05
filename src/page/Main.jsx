@@ -1,17 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { AppContext } from '../App';
 
 function Main() {
-  const navigate = useNavigate();
+  const {setPage} = useContext(AppContext);
 
   return (
     <>
       <h1>Random Debate</h1>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <button onClick={() => navigate('/Secondpage')}>
+        <button onClick={() => setPage("create")}>
           토론방 만들기
         </button>
-        <button onClick={() => navigate('/Thirdpage')}>
+        <button onClick={() => setPage("join")}>
           토론방 참여
         </button>
       </div>
