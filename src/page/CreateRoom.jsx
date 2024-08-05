@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import BackButton from '../components/BackButton';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
-
+import ShowTeam from "../components/ShowTeam";
 
 function Secondpage() {
+    const [isStarted, setIsStarted] = useState(false);
+    const [team, setTeam] = useState(0);
+    const [topic, setTopic] = useState("");
     const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
     const navigate = useNavigate();
 
@@ -27,8 +30,10 @@ function Secondpage() {
                             '온라인 교육이 오프라인 교육보다 효과적인가',
                             '소셜미디어는 사회적으로 긍정적인 효과를 보이는가'
                         ];
-                        const selectedTopic = topic[Math.floor(Math.random() * topic.length)]
-                        const team = Math.floor(Math.random() * 2)
+                        const selectedTopic = topic[Math.floor(Math.random() * topic.length)];
+                        const team = Math.floor(Math.random() * 2);
+                        setTeam(team);
+                        setTopic(selectedTopic);
 
                         channel.send({
                             type: 'broadcast',
@@ -37,7 +42,9 @@ function Secondpage() {
                                 team: team === 0 ? 1 : 0,
                                 topic : selectedTopic
                             } },
-                        }).then((err) => console.log("주재, 팀 정보 전송?", err));
+                        }).then((result) => {
+                            if (result === "ok") setIsStarted(true);
+                        });
                     }
                 }
             );
@@ -50,11 +57,21 @@ function Secondpage() {
     }, []);
     return (
         <>
+        {isStarted ?
+            <div>
+                <h2>토론 주제</h2>
+                <h2>{topic}</h2>
+                <ShowTeam team={team} />
+            </div>
+            :
+            <>
             <h2>초대코드</h2>
             <div>
                 {code}
             </div>
             <BackButton />
+        </>
+        }
         </>
     )
 }
