@@ -1,10 +1,11 @@
 import React, { useRef, useContext } from 'react';
 import BackButton from '../components/BackButton';;
 import { AppContext } from '../App';
+import supabase from '../supabase';
 
 function JoinRoom() {
     const codeInputRef = useRef();
-    const {setPage, setTeam, setTopic, supabase} = useContext(AppContext);
+    const {setPage, setTeam, setTopic} = useContext(AppContext);
 
 
     function onClick() {
