@@ -19,15 +19,10 @@ export default function App() {
   return (
     <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic}}>
       {
-        page === "create" ? 
-        <CreateRoom />
-        : page === "join" ?
-        <JoinRoom />
-        : page === "ready" ?
-        <GameReady />
-        :page === "test"?
-        <Test/>
-        :
+        page === "create" ? <CreateRoom /> :
+        page === "join" ? <JoinRoom /> :
+        page === "ready" ? <GameReady /> :
+        page === "test"? <Test/> :
         <Main />
       }
     </AppContext.Provider>

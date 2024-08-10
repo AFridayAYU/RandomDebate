@@ -40,7 +40,7 @@ function JoinRoom() {
     return (
         <>
         <h2>코드입력</h2>
-        <input type="text" maxlength="6" ref={codeInputRef}/>
+        <input type="text" maxLength={6} ref={codeInputRef}/>
         <button onClick={onClick}>시작</button>
         <BackButton/>
         </>
