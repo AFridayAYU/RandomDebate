@@ -9,6 +9,13 @@ export default function Test() {
     }
     const {setPage, topic, team} = useContext(AppContext);
 
+    useEffect(() => {
+        setTimeout(() => {
+            setPage("test2");
+        }, 5000)
+
+    }, []);
+
     return (
         <>
         <h2>{topic}</h2>
