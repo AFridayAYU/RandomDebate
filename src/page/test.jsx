@@ -1,7 +1,6 @@
 import { useContext , useEffect, useState} from "react";
 import { AppContext } from "../App";
 
-
 export default function Test() {
     const [inputText, setInputText] = useState('');
     const handleInputChange = (event) => {

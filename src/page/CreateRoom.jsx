@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../App';
 import BackButton from '../components/BackButton';
+import supabase from '../supabase';
 
 function CreateRoom() {
     const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
-    const {setPage, setTeam, setTopic, supabase} = useContext(AppContext);
+    const {setPage, setTeam, setTopic} = useContext(AppContext);
 
     useEffect(() => {
         console.log('생성');

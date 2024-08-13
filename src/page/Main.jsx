@@ -14,6 +14,9 @@ function Main() {
         <button onClick={() => setPage("join")}>
           토론방 참여
         </button>
+        <button onClick={() => setPage("test")}>
+          TEST_PAGE
+        </button>
       </div>
     </>
   )

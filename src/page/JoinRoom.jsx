@@ -1,10 +1,11 @@
 import React, { useRef, useContext } from 'react';
 import BackButton from '../components/BackButton';;
 import { AppContext } from '../App';
+import supabase from '../supabase';
 
 function JoinRoom() {
     const codeInputRef = useRef();
-    const {setPage, setTeam, setTopic, supabase} = useContext(AppContext);
+    const {setPage, setTeam, setTopic} = useContext(AppContext);
 
 
     function onClick() {
@@ -39,7 +40,7 @@ function JoinRoom() {
     return (
         <>
         <h2>코드입력</h2>
-        <input type="text" maxlength="6" ref={codeInputRef}/>
+        <input type="text" maxLength={6} ref={codeInputRef}/>
         <button onClick={onClick}>시작</button>
         <BackButton/>
         </>
