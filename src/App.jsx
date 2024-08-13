@@ -9,6 +9,7 @@ import CreateRoom from './page/CreateRoom';
 import JoinRoom from'./page/JoinRoom';
 import GameReady from './page/GameReady';
 import Test from './page/test';
+import Test2 from './page/Test2';
 
 export const AppContext = createContext();
 
@@ -29,6 +30,8 @@ export default function App() {
         <GameReady />
         :page === "test"?
         <Test/>
+        : page === "test2"?
+        <Test2 />
         :
         <Main />
       }
