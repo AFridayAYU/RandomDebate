@@ -1,18 +1,46 @@
-import { useContext , useEffect, useState} from "react";
+import { useContext , useEffect, useRef, useState} from "react";
 import { AppContext } from "../App";
+import Timer from "../components/Timer";
 
 export default function Test() {
     const [inputText, setInputText] = useState('');
+    const isReady = useRef(false);
+
     const handleInputChange = (event) => {
         setInputText(event.target.value);
     }
-    const {setPage, topic, team} = useContext(AppContext);
+    const {setPage, topic, channel} = useContext(AppContext);
+
+    function send() {
+        channel.send({
+            type: 'broadcast',
+            event: 'debate',
+            payload: { message: inputText },
+        }).then(() => {
+            if (isReady.current) {
+                setPage("test2");
+            }
+            else {
+                isReady.current = true;
+            }
+        });
+    }
 
     useEffect(() => {
-        setTimeout(() => {
-            setPage("test2");
-        }, 5000)
-
+        channel.on(
+            'broadcast',
+            { event: 'debate' },
+            (payload) => {
+                const data = payload.payload.message;
+                console.log(data);
+                if (isReady.current) {
+                    setPage("test2");
+                }
+                else {
+                    isReady.current = true;
+                }
+            }
+        );
     }, []);
 
     return (
@@ -24,7 +52,8 @@ export default function Test() {
         onChange={handleInputChange}
         rows="15"
         cols="70"></textarea>
-        <button onClick={() => setPage("test2")}>완료</button>
+        <button onClick={send}>완료</button>
+        <Timer ms={30*1000} onTimerEnd={send} />
         </>
     )
 }

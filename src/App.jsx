@@ -16,9 +16,10 @@ export default function App() {
   const [page, setPage] = useState("");
   const [team, setTeam] = useState("");
   const [topic, setTopic] = useState("");
+  const [channel, setChannel] = useState();
 
   return (
-    <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic}}>
+    <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic, channel, setChannel}}>
       {
         page === "create" ? <CreateRoom /> :
         page === "join" ? <JoinRoom /> :

@@ -5,13 +5,13 @@ import supabase from '../supabase';
 
 function CreateRoom() {
     const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
-    const {setPage, setTeam, setTopic} = useContext(AppContext);
+    const {setPage, setTeam, setTopic, setChannel} = useContext(AppContext);
 
     useEffect(() => {
         console.log('생성');
         supabase.from('room_list').insert({id: code, start: false}).then((err) => {
             const channel = supabase.channel(code);
-            
+            setChannel(channel);
             channel.on(
                 'broadcast',
                 { event: 'connect' },
