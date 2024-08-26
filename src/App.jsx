@@ -11,6 +11,7 @@ import Test from './page/test';
 import Test2 from './page/Test2';
 import Test3 from './page/Test3';
 import GeminiTest from './page/GeminiTest';
+import Test4 from './page/Test4';
 
 export const AppContext = createContext();
 
@@ -30,6 +31,7 @@ export default function App() {
         page === "test"? <Test/> :
         page === "test2"? <Test2 /> :
         page === "test3"? <Test3 /> :
+        page === "test4"? <Test4/> :
         page === "gemini-test" ? <GeminiTest /> :
         <Main />
       }

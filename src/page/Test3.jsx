@@ -2,18 +2,61 @@ import { useContext , useEffect, useRef, useState} from "react";
 import { AppContext } from "../App";
 import Timer from "../components/Timer";
 
-export default function Test3(){
+export default function Test3() {
+    const mounted = useRef(false)
     const [inputText, setInputText] = useState('');
-    const {setPage, topic, team, chat, setChat, channel} = useContext(AppContext);
+    const isReady = useRef(false);
 
     const handleInputChange = (event) => {
         setInputText(event.target.value);
     }
-    
-    return(
+    const {setPage, topic, team, chat, setChat, channel} = useContext(AppContext);
+
+    function send() {
+        const msg = `${team ? "찬성측 반론" : "반대측 반론"}: ${inputText}`;
+        channel.send({
+            type: 'broadcast',
+            event: 'debate2',
+            payload: { message: msg },
+        }).then(() => {
+            if (isReady.current) {
+                setPage("test4");
+            }
+            else {
+                isReady.current = true;
+            }
+            setChat(prevChat => [...prevChat, msg]);
+        });
+    }
+
+    useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+            channel.on(
+                'broadcast',
+                { event: 'debate2' },
+                (payload) => {
+                    const data = payload.payload.message;
+                    console.log(data);
+                    if (isReady.current) {
+                        setPage("test4");
+                    }
+                    else {
+                        isReady.current = true;
+                    }
+                    setChat(prevChat => [...prevChat, data]);
+                }
+            );
+        }
+        else {
+            console.log(chat);
+        }
+    }, [chat]);
+
+    return (
         <>
         <h2>{topic}</h2>
-        <h2>반론</h2>
+        <h2>양측 반론</h2>
         <ul>
             {chat.map((text, idx) => <li key={idx}>{text}</li>)}
         </ul>
@@ -23,7 +66,8 @@ export default function Test3(){
             onChange={handleInputChange}
             rows="15"
             cols="70"></textarea>
+        <button onClick={send}>완료</button>
+        <Timer ms={60*1000} onTimerEnd={send} />
         </>
     )
-
 }
