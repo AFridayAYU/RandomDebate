@@ -9,6 +9,7 @@ import JoinRoom from'./page/JoinRoom';
 import GameReady from './page/GameReady';
 import Test from './page/test';
 import Test2 from './page/Test2';
+import Test3 from './page/Test3';
 import GeminiTest from './page/GeminiTest';
 
 export const AppContext = createContext();
@@ -28,6 +29,7 @@ export default function App() {
         page === "ready" ? <GameReady /> :
         page === "test"? <Test/> :
         page === "test2"? <Test2 /> :
+        page === "test3"? <Test3 /> :
         page === "gemini-test" ? <GeminiTest /> :
         <Main />
       }
