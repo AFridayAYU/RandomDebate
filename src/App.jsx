@@ -10,7 +10,7 @@ import GameReady from './page/GameReady';
 import Test from './page/test';
 import Test2 from './page/Test2';
 import Test3 from './page/Test3';
-import GeminiTest from './page/GeminiTest';
+import Result from './page/Result';
 import Test4 from './page/Test4';
 
 export const AppContext = createContext();
@@ -32,7 +32,7 @@ export default function App() {
         page === "test2"? <Test2 /> :
         page === "test3"? <Test3 /> :
         page === "test4"? <Test4/> :
-        page === "gemini-test" ? <GeminiTest /> :
+        page === "gemini-test" ? <Result /> :
         <Main />
       }
     </AppContext.Provider>
