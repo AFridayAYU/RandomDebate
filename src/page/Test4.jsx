@@ -20,7 +20,7 @@ export default function Test4() {
             payload: { message: msg },
         }).then(() => {
             if (isReady.current) {
-                setPage("gemini-test");
+                setPage("result");
             }
             else {
                 isReady.current = true;

@@ -5,7 +5,7 @@ import { AppContext } from "../App";
 import supabase from "../supabase";
 
 export default function Result() {
-    const {topic, team, chat, channel,code, setCode} = useContext(AppContext);
+    const {topic, team, chat, channel, code, setCode, setPage} = useContext(AppContext);
     const mounted = useRef(false);
     const [result, setResult] = useState(undefined);
     useEffect(() => {
@@ -98,6 +98,7 @@ export default function Result() {
                 }
             );
         }
+        setCode("");
     }, []);
     return (
         <>
@@ -112,6 +113,7 @@ export default function Result() {
                 <p>{result.feedback[0]}</p>
                 <h2>반대측 피드백</h2>
                 <p>{result.feedback[1]}</p>
+                <button onClick={() => setPage('main')}>메인화면으로 돌아가기</button>
             </>
             :
             <h2>토론 최종 평가 중...</h2>
