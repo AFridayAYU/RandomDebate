@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { AppContext } from '../App';
 import BackButton from '../components/BackButton';
 import supabase from '../supabase';
 
 function CreateRoom() {
-    const {setPage, setTeam, setTopic, setChannel, code} = useContext(AppContext);
+    const codeRef = useRef();
+    const {setPage, setTeam, setTopic, setChannel, setCode} = useContext(AppContext);
 
     useEffect(() => {
         console.log('생성');
-        supabase.from('room_list').insert({id: code, start: false}).then((err) => {
-            const channel = supabase.channel(code);
+        codeRef.current = Math.random().toString(36).substring(2,8)
+        setCode(codeRef.current);
+        supabase.from('room_list').insert({id: codeRef.current, start: false}).then((err) => {
+            const channel = supabase.channel(codeRef.current);
             setChannel(channel);
             channel.on(
                 'broadcast',
@@ -46,14 +49,13 @@ function CreateRoom() {
             channel.subscribe();
         });
         return () => {
-            console.log('삭제');
         }
     }, []);
     return (
         <>
         <h2>초대코드</h2>
-        {code}
-        <BackButton />
+        {codeRef.current}
+        <BackButton onClick={() => supabase.from('room_list').delete().eq('id', codeRef.current).then(() => setPage("main"))} />
         </>
     )
 }

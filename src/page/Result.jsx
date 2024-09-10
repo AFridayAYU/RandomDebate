@@ -94,7 +94,7 @@ export default function Result() {
                 (payload) => {
                     setResult(payload.payload.message);
                     supabase.removeChannel(channel);
-                    supabase.from('room_list').delete().eq('id', code).then(() => console.log(`${code} 삭제됨`));
+                    supabase.from('room_list').delete().eq('id', code).then(() => {});
                 }
             );
         }
