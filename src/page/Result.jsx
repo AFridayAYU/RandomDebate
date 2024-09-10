@@ -104,7 +104,7 @@ export default function Result() {
         <>
             {result ? 
             <>
-                <h1>승자: {result.score[0] > result.score[1] ? "찬성" : "반대"}</h1>
+                <h1>승자: {result.score[0] > result.score[1] ? "찬성" : result.score[0] < result.score[1] ? "반대" : "무승부"}</h1>
                 <h2>찬성측 점수</h2>
                 <h1>{result.score[0]}</h1>
                 <h2>반대측 점수</h2>
