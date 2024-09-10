@@ -5,7 +5,7 @@ import Timer from "../components/Timer";
 export default function Test() {
     const mounted = useRef(false);
     const [inputText, setInputText] = useState('');
-    const [inputDisabled, setInputDisabled] = useState(false);
+    const [sendDisabled, setSendDisabled] = useState(false);
     const isReady = useRef(false);
 
 
@@ -15,6 +15,7 @@ export default function Test() {
     const {setPage, topic, team, chat, setChat, channel} = useContext(AppContext);
 
     function send() {
+        if (sendDisabled) return;
         const msg = `${team ? "찬성측 입론" : "반대측 입론"}: ${inputText}`;
         channel.send({
             type: 'broadcast',
@@ -26,7 +27,7 @@ export default function Test() {
             }
             else {
                 isReady.current = true;
-                setInputDisabled(true);
+                setSendDisabled(true);
             }
             setChat(prevChat => [...prevChat, msg]);
         });
@@ -43,7 +44,6 @@ export default function Test() {
                     console.log(data);
                     if (isReady.current) {
                         setPage("test2");
-                        
                     }
                     else {
                         isReady.current = true;
@@ -70,7 +70,7 @@ export default function Test() {
             onChange={handleInputChange}
             rows="15"
             cols="70"></textarea>
-        <button onClick={send} disabled={inputDisabled}>완료</button>
+        <button onClick={send} disabled={sendDisabled}>완료</button>
         <Timer ms={60*1000} onTimerEnd={send} />
         </>
     )
