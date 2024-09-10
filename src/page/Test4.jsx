@@ -39,7 +39,7 @@ export default function Test4() {
                     const data = payload.payload.message;
                     console.log(data);
                     if (isReady.current) {
-                        setPage("gemini-test");
+                        setPage("result");
                     }
                     else {
                         isReady.current = true;

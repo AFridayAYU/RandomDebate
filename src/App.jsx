@@ -1,7 +1,7 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 import Main from './page/Main';
 import CreateRoom from './page/CreateRoom';
@@ -15,6 +15,15 @@ import Test4 from './page/Test4';
 
 export const AppContext = createContext();
 
+function preventGoBack() {
+  history.push(null, '', history.location.href);
+}
+
+function preventClose(e) {
+  e.preventDefault();
+  e.returnValue = '';
+}
+
 export default function App() {
   const [page, setPage] = useState("");
   const [team, setTeam] = useState("");
@@ -22,6 +31,11 @@ export default function App() {
   const [chat, setChat] = useState([]);
   const [channel, setChannel] = useState();
   const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
+
+  useEffect(() => {
+    window.addEventListener('popstate', preventGoBack);
+    window.addEventListener('beforeunload', preventClose);
+  }, []);
 
   return (
     <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic, chat, setChat, channel, setChannel,code, setCode}}>
@@ -33,7 +47,7 @@ export default function App() {
         page === "test2"? <Test2 /> :
         page === "test3"? <Test3 /> :
         page === "test4"? <Test4/> :
-        page === "gemini-test" ? <Result /> :
+        page === "result" ? <Result /> :
         <Main />
       }
     </AppContext.Provider>
