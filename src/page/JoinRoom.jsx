@@ -5,7 +5,7 @@ import supabase from '../supabase';
 
 function JoinRoom() {
     const codeInputRef = useRef();
-    const {setPage, setTeam, setTopic, setChannel} = useContext(AppContext);
+    const {setPage, setTeam, setTopic, setChannel, setCode} = useContext(AppContext);
 
 
     function onClick() {
@@ -16,6 +16,7 @@ function JoinRoom() {
             }
             else {
                 // alert("성공")
+                setCode(codeInputRef.current.value);
                 const channel = supabase.channel(result.data[0].id);
                 setChannel(channel);
                 channel.subscribe((status) => {

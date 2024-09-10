@@ -3,9 +3,11 @@ import { AppContext } from "../App";
 import Timer from "../components/Timer";
 
 export default function Test() {
-    const mounted = useRef(false)
+    const mounted = useRef(false);
     const [inputText, setInputText] = useState('');
+    const [inputDisabled, setInputDisabled] = useState(false);
     const isReady = useRef(false);
+
 
     const handleInputChange = (event) => {
         setInputText(event.target.value);
@@ -24,6 +26,7 @@ export default function Test() {
             }
             else {
                 isReady.current = true;
+                setInputDisabled(true);
             }
             setChat(prevChat => [...prevChat, msg]);
         });
@@ -67,7 +70,7 @@ export default function Test() {
             onChange={handleInputChange}
             rows="15"
             cols="70"></textarea>
-        <button onClick={send}>완료</button>
+        <button onClick={send} disabled={inputDisabled}>완료</button>
         <Timer ms={60*1000} onTimerEnd={send} />
         </>
     )

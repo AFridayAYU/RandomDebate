@@ -5,7 +5,7 @@ import { AppContext } from "../App";
 import supabase from "../supabase";
 
 export default function Result() {
-    const {topic, team, chat, channel} = useContext(AppContext);
+    const {topic, team, chat, channel,code, setCode} = useContext(AppContext);
     const mounted = useRef(false);
     const [result, setResult] = useState(undefined);
     useEffect(() => {
@@ -94,6 +94,7 @@ export default function Result() {
                 (payload) => {
                     setResult(payload.payload.message);
                     supabase.removeChannel(channel);
+                    supabase.from('room_list').delete().eq('id', code).then(() => console.log(`${code} 삭제됨`));
                 }
             );
         }
