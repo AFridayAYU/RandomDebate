@@ -1,5 +1,3 @@
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
 import { createContext, useEffect, useState } from 'react';
 
@@ -7,11 +5,8 @@ import Main from './page/Main';
 import CreateRoom from './page/CreateRoom';
 import JoinRoom from'./page/JoinRoom';
 import GameReady from './page/GameReady';
-import Test from './page/test';
-import Test2 from './page/Test2';
-import Test3 from './page/Test3';
+import Game from './page/Game';
 import Result from './page/Result';
-import Test4 from './page/Test4';
 
 export const AppContext = createContext();
 
@@ -25,12 +20,15 @@ function preventClose(e) {
 }
 
 export default function App() {
+  const PROG_LIST = ["입론", "반론", "최종 변론"];
+
   const [page, setPage] = useState("");
   const [team, setTeam] = useState("");
   const [topic, setTopic] = useState("");
   const [chat, setChat] = useState([]);
   const [channel, setChannel] = useState();
   const [code, setCode] = useState(Math.random().toString(36).substring(2,8));
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     window.addEventListener('popstate', preventGoBack);
@@ -38,15 +36,12 @@ export default function App() {
   }, []);
 
   return (
-    <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic, chat, setChat, channel, setChannel,code, setCode}}>
+    <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic, chat, setChat, channel, setChannel, code, setCode, progress, setProgress}}>
       {
         page === "create" ? <CreateRoom /> :
         page === "join" ? <JoinRoom /> :
-        page === "ready" ? <GameReady /> :
-        page === "test"? <Test/> :
-        page === "test2"? <Test2 /> :
-        page === "test3"? <Test3 /> :
-        page === "test4"? <Test4/> :
+        page === "ready" ? <GameReady progList={PROG_LIST} /> :
+        page === "game"? <Game progList={PROG_LIST} /> :
         page === "result" ? <Result /> :
         <Main />
       }

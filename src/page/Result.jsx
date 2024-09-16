@@ -5,7 +5,7 @@ import { AppContext } from "../App";
 import supabase from "../supabase";
 
 export default function Result() {
-    const {topic, team, chat, channel, code, setCode, setPage} = useContext(AppContext);
+    const { topic, team, chat, channel, code, setCode } = useContext(AppContext);
     const mounted = useRef(false);
     const [result, setResult] = useState(undefined);
     useEffect(() => {
@@ -37,10 +37,10 @@ export default function Result() {
         반대측 반론:
         반론 내용
         
-        찬성측 최종 반론:
+        찬성측 최종 변론:
         반론 내용
         
-        반대측 최종 반론:
+        반대측 최종 변론:
         반론 내용
         
         최종 평가(JSON 출력):
@@ -83,7 +83,7 @@ export default function Result() {
                     payload: { message: resultObj },
                 }).then(() => {
                     setResult(resultObj);
-                    supabase.removeChannel(channel);
+                    supabase.removeAllChannels();
                 });
             });
         }
@@ -93,8 +93,8 @@ export default function Result() {
                 { event: 'result' },
                 (payload) => {
                     setResult(payload.payload.message);
-                    supabase.removeChannel(channel);
-                    supabase.from('room_list').delete().eq('id', code).then(() => {});
+                    supabase.removeAllChannels();
+                    supabase.from('room_list').delete().eq('id', code).then(() => { });
                 }
             );
         }
@@ -102,21 +102,21 @@ export default function Result() {
     }, []);
     return (
         <>
-            {result ? 
-            <>
-                <h1>승자: {result.score[0] > result.score[1] ? "찬성" : result.score[0] < result.score[1] ? "반대" : "무승부"}</h1>
-                <h2>찬성측 점수</h2>
-                <h1>{result.score[0]}</h1>
-                <h2>반대측 점수</h2>
-                <h1>{result.score[1]}</h1>
-                <h2>찬성측 피드백</h2>
-                <p>{result.feedback[0]}</p>
-                <h2>반대측 피드백</h2>
-                <p>{result.feedback[1]}</p>
-                <button onClick={() => setPage('main')}>메인화면으로 돌아가기</button>
-            </>
-            :
-            <h2>토론 최종 평가 중...</h2>
+            {result ?
+                <>
+                    <h1>승자: {result.score[0] > result.score[1] ? "찬성" : result.score[0] < result.score[1] ? "반대" : "무승부"}</h1>
+                    <h2>찬성측 점수</h2>
+                    <h1>{result.score[0]}</h1>
+                    <h2>반대측 점수</h2>
+                    <h1>{result.score[1]}</h1>
+                    <h2>찬성측 피드백</h2>
+                    <p>{result.feedback[0]}</p>
+                    <h2>반대측 피드백</h2>
+                    <p>{result.feedback[1]}</p>
+                    <button onClick={() => window.location.reload()}>메인화면으로 돌아가기</button>
+                </>
+                :
+                <h2>토론 최종 평가 중...</h2>
             }
         </>
     )
