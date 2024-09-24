@@ -7,6 +7,7 @@ import JoinRoom from'./page/JoinRoom';
 import GameReady from './page/GameReady';
 import Game from './page/Game';
 import Result from './page/Result';
+import supabase from './supabase';
 
 export const AppContext = createContext();
 
@@ -24,6 +25,7 @@ export default function App() {
 
   const [page, setPage] = useState("");
   const [team, setTeam] = useState("");
+  const [topicAll, setTopicAll] = useState([]);
   const [topic, setTopic] = useState("");
   const [chat, setChat] = useState([]);
   const [channel, setChannel] = useState();
@@ -33,10 +35,13 @@ export default function App() {
   useEffect(() => {
     window.addEventListener('popstate', preventGoBack);
     window.addEventListener('beforeunload', preventClose);
+    supabase.from('topic_list').select('*').then((result, err) => {
+      setTopicAll(result.data.map(data => data.topic));
+    });
   }, []);
 
   return (
-    <AppContext.Provider value={{page, setPage, team, setTeam, topic, setTopic, chat, setChat, channel, setChannel, code, setCode, progress, setProgress}}>
+    <AppContext.Provider value={{page, setPage, team, setTeam, topicAll, setTopicAll, topic, setTopic, chat, setChat, channel, setChannel, code, setCode, progress, setProgress}}>
       {
         page === "create" ? <CreateRoom /> :
         page === "join" ? <JoinRoom /> :

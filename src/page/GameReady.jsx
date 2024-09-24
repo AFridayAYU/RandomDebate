@@ -6,6 +6,7 @@ export default function GameReady({ progList }) {
     const { setPage, topic, team, chat, progress } = useContext(AppContext);
 
     useEffect(() => {
+        console.log(topic);
         setTimeout(() => {
             setPage("game");
         }, 5000)
