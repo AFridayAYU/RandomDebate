@@ -8,6 +8,7 @@ export default function Result() {
     const { topic, team, chat, channel, code, setCode } = useContext(AppContext);
     const mounted = useRef(false);
     const [result, setResult] = useState(undefined);
+    const [totalScore, setTotalScore] = useState([]);
     useEffect(() => {
         if (team) {
             const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
@@ -45,15 +46,60 @@ export default function Result() {
         
         최종 평가(JSON 출력):
         {
-            score: [
-                // 내용 관련성 및 논리적 사고력 (40%), 의사소통 능력 (30%), 태도 및 참여도 (30%)
-                0, // 찬성 측 점수 (100점 만점)
-                0 // 반대 측 점수 (100점 만점)
-            ],
-            feedback: [
-                "", // 찬성 측에 대한 평가 및 피드백 (반대측 평가 금지)
-                "" // 반대 측에 대한 평가 및 피드백 (찬성측 평가 금지)
-            ]
+            score: {
+                pos: [ // 찬성측 점수
+                    0, // 논리적 일관성: 10점 만점
+                    0, //논리적 반박력: 10점 만점
+                    0, //주제에 대한 이해도: 10점 만점
+                    0, //명확한 주제 전달: 10점 만점
+                    0, //표현의 설득력: 10점 만점
+                    0, //상대측 주장에 대한 대응력: 10점 만점
+                    0, //발언의 일관성: 10점 만점
+                    0, //태도: 10점 만점
+                    0, //대안 제시 능력: 10점 만점
+                    0, //최종 변론의 설득력: 10점 만점
+                ]
+                neg: [ // 반대측 점수
+                    0, // 논리적 일관성: 10점 만점
+                    0, //논리적 반박력: 10점 만점
+                    0, //주제에 대한 이해도: 10점 만점
+                    0, //명확한 주제 전달: 10점 만점
+                    0, //표현의 설득력: 10점 만점
+                    0, //상대측 주장에 대한 대응력: 10점 만점
+                    0, //발언의 일관성: 10점 만점
+                    0, //태도: 10점 만점
+                    0, //대안 제시 능력: 10점 만점
+                    0, //최종 변론의 설득력: 10점 만점
+                ]
+                
+            }
+            feedback: {
+                pos: [ // 찬성측 피드백
+                    ", // 논리적 일관성
+                    ", // 논리적 반박력
+                    ", // 주제에 대한 이해도
+                    ", // 명확한 주제 전달
+                    ", // 표현의 설득력
+                    ", // 상대측 주장에 대한 대응력
+                    ", // 발언의 일관성
+                    ", // 태도
+                    ", // 대안 제시 능력
+                    ", // 최종 변론의 설득력
+                ]
+                neg: [ // 반대측 피드백
+                    ", // 논리적 일관성
+                    ", // 논리적 반박력
+                    ", // 주제에 대한 이해도
+                    ", // 명확한 주제 전달
+                    ", // 표현의 설득력
+                    ", // 상대측 주장에 대한 대응력
+                    ", // 발언의 일관성
+                    ", // 태도
+                    ", // 대안 제시 능력
+                    ", // 최종 변론의 설득력
+                ]
+        
+            }
         }
         
         
@@ -83,6 +129,7 @@ export default function Result() {
                     payload: { message: resultObj },
                 }).then(() => {
                     setResult(resultObj);
+                    setTotalScore(() => [resultObj.score.pos.reduce((acc, curr) => acc + curr), resultObj.score.neg.reduce((acc, curr) => acc + curr)])
                     supabase.removeAllChannels();
                 });
             });
@@ -92,7 +139,9 @@ export default function Result() {
                 'broadcast',
                 { event: 'result' },
                 (payload) => {
-                    setResult(payload.payload.message);
+                    const resultObj = payload.payload.message
+                    setResult(resultObj);
+                    setTotalScore(() => [resultObj.score.pos.reduce((acc, curr) => acc + curr), resultObj.score.neg.reduce((acc, curr) => acc + curr)])
                     supabase.removeAllChannels();
                     supabase.from('room_list').delete().eq('id', code).then(() => { });
                 }
@@ -104,15 +153,53 @@ export default function Result() {
         <>
             {result ?
                 <>
-                    <h1>승자: {result.score[0] > result.score[1] ? "찬성" : result.score[0] < result.score[1] ? "반대" : "무승부"}</h1>
+                    <h1>승자: {totalScore[0] > totalScore[1] ? "찬성" : totalScore[0] < totalScore[1] ? "반대" : "무승부"}</h1>
                     <h2>찬성측 점수</h2>
-                    <h1>{result.score[0]}</h1>
+                    <h1>총점: {totalScore[0]}</h1>
+                    <p>논리적 일관성: {result.score.pos[0]}</p>
+                    <p>논리적 반박력: {result.score.pos[1]}</p>
+                    <p>주제에 대한 이해도: {result.score.pos[2]}</p>
+                    <p>명확한 주제 전달: {result.score.pos[3]}</p>
+                    <p>표현의 설득력: {result.score.pos[4]}</p>
+                    <p>상대측 주장에 대한 대응력: {result.score.pos[5]}</p>
+                    <p>발언의 일관성: {result.score.pos[6]}</p>
+                    <p>태도: {result.score.pos[7]}</p>
+                    <p>대안 제시 능력: {result.score.pos[8]}</p>
+                    <p>최종 변론의 설득력: {result.score.pos[9]}</p>
                     <h2>반대측 점수</h2>
-                    <h1>{result.score[1]}</h1>
+                    <h1>총점: {totalScore[1]}</h1>
+                    <p>논리적 일관성: {result.score.neg[0]}</p>
+                    <p>논리적 반박력: {result.score.neg[1]}</p>
+                    <p>주제에 대한 이해도: {result.score.neg[2]}</p>
+                    <p>명확한 주제 전달: {result.score.neg[3]}</p>
+                    <p>표현의 설득력: {result.score.neg[4]}</p>
+                    <p>상대측 주장에 대한 대응력: {result.score.neg[5]}</p>
+                    <p>발언의 일관성: {result.score.neg[6]}</p>
+                    <p>태도: {result.score.neg[7]}</p>
+                    <p>대안 제시 능력: {result.score.neg[8]}</p>
+                    <p>최종 변론의 설득력: {result.score.neg[9]}</p>
                     <h2>찬성측 피드백</h2>
-                    <p>{result.feedback[0]}</p>
+                    <p>논리적 일관성: {result.feedback.pos[0]}</p>
+                    <p>논리적 반박력: {result.feedback.pos[1]}</p>
+                    <p>주제에 대한 이해도: {result.feedback.pos[2]}</p>
+                    <p>명확한 주제 전달: {result.feedback.pos[3]}</p>
+                    <p>표현의 설득력: {result.feedback.pos[4]}</p>
+                    <p>상대측 주장에 대한 대응력: {result.feedback.pos[5]}</p>
+                    <p>발언의 일관성: {result.feedback.pos[6]}</p>
+                    <p>태도: {result.feedback.pos[7]}</p>
+                    <p>대안 제시 능력: {result.feedback.pos[8]}</p>
+                    <p>최종 변론의 설득력: {result.feedback.pos[9]}</p>
                     <h2>반대측 피드백</h2>
-                    <p>{result.feedback[1]}</p>
+                    <p>논리적 일관성: {result.feedback.neg[0]}</p>
+                    <p>논리적 반박력: {result.feedback.neg[1]}</p>
+                    <p>주제에 대한 이해도: {result.feedback.neg[2]}</p>
+                    <p>명확한 주제 전달: {result.feedback.neg[3]}</p>
+                    <p>표현의 설득력: {result.feedback.neg[4]}</p>
+                    <p>상대측 주장에 대한 대응력: {result.feedback.neg[5]}</p>
+                    <p>발언의 일관성: {result.feedback.neg[6]}</p>
+                    <p>태도: {result.feedback.neg[7]}</p>
+                    <p>대안 제시 능력: {result.feedback.neg[8]}</p>
+                    <p>최종 변론의 설득력: {result.feedback.neg[9]}</p>
                     <button onClick={() => window.location.reload()}>메인화면으로 돌아가기</button>
                 </>
                 :
