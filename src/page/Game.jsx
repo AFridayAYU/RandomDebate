@@ -67,9 +67,13 @@ export default function Game({ progList }) {
             <h2>{topic}</h2>
             <ShowTeam team={team} />
             <h2>양측 {progList[progress]}</h2>
-            <ul>
-                {chat.map((text, idx) => <li key={idx}>{text}</li>)}
-            </ul>
+            {chat.map((text, idx) => <div style={{
+                backgroundColor: `${text.split(':', 1)[0].includes('찬성') ? "#d6efe7" : "#f5cfd3"}`,
+                padding: "10px",
+                margin: "10px",
+                borderRadius: "16px",
+                listStyleType: "unset",
+            }} key={idx}>{text}</div>)}
             <textarea
                 placeholder={`${progList[progress]}을 작성하세요!`}
                 value={inputText}
