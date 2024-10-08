@@ -5,7 +5,7 @@ import supabase from '../supabase';
 
 function JoinRoom() {
     const codeInputRef = useRef();
-    const {setPage, setTeam, setTopic, setChannel, setCode} = useContext(AppContext);
+    const { setPage, setTeam, setTopic, setChannel, setCode } = useContext(AppContext);
 
 
     function onClick() {
@@ -40,12 +40,23 @@ function JoinRoom() {
         })
     }
     return (
-        <>
-        <h2>코드입력</h2>
-        <input type="text" maxLength={6} ref={codeInputRef}/>
-        <button onClick={onClick}>시작</button>
-        <BackButton onClick={() => setPage("main")}/>
-        </>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            //gap: "1rem",
+        }}>
+            <h2>코드입력</h2>
+            <input style={{
+                width: "8rem",
+                height: "2rem",
+                fontSize: "2rem",
+                textAlign: "center",
+                borderRadius: "0.5rem",
+            }} type="text" maxLength={6} ref={codeInputRef} />
+            <button onClick={onClick}>시작</button>
+            <button onClick={() => setPage("main")}>뒤로가기</button>
+        </div>
     )
 }
 
