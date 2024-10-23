@@ -25,7 +25,7 @@ export default function Game({ progList }) {
 
     function send() {
         if (sendDisabled) return;
-        const msg = `${team ? `찬성측 ${progList[progress]}` : `반대측 ${progList[progress]}`}: ${inputText}`;
+        const msg = `${team ? `찬성측 ${progList[progress]}` : `반대측 ${progList[progress]}`}₩ ${inputText}`;
         channel.send({
             type: 'broadcast',
             event: `debate${progress}`,
@@ -68,12 +68,18 @@ export default function Game({ progList }) {
             <ShowTeam team={team} />
             <h2>양측 {progList[progress]}</h2>
             {chat.map((text, idx) => <div style={{
-                backgroundColor: `${text.split(':', 1)[0].includes('찬성') ? "#d6efe7" : "#f5cfd3"}`,
+                backgroundColor: `${text.split('₩', 1)[0].includes('찬성') ? "#d6efe7" : "#f5cfd3"}`,
                 padding: "10px",
                 margin: "10px",
                 borderRadius: "16px",
                 listStyleType: "unset",
-            }} key={idx}>{text}</div>)}
+            }} key={idx}>
+                <div style={{textAlign: `${text.split('₩', 1)[0].includes('찬성') ? "left" : "right"}`,}}>
+                    <b>{text.split('₩', 1)[0]}</b>
+                </div>
+                <p style={{textAlign: 'left'}}>{text.split('₩', 2)[1]}</p>
+            </div>
+            )}
             <textarea
                 placeholder={`${progList[progress]}을 작성하세요!`}
                 value={inputText}

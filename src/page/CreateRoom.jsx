@@ -5,6 +5,7 @@ import supabase from '../supabase';
 
 function CreateRoom() {
     const codeRef = useRef();
+    const checkBoxRef = useRef();
     const { topicAll, setPage, setTeam, setTopic, setChannel, setCode } = useContext(AppContext);
 
     useEffect(() => {
@@ -21,7 +22,7 @@ function CreateRoom() {
                 (payload) => {
                     console.log(payload);
                     if (payload.payload.message === "CONNECT") {
-                        const selectedTopic = topicAll[Math.floor(Math.random() * topicAll.length)];
+                        const selectedTopic = checkBoxRef.current.checked ? '최저임금을 인상하여야 한다.' : topicAll[Math.floor(Math.random() * topicAll.length)];
                         console.log(selectedTopic);
                         const team = Math.floor(Math.random() * 2);
                         setTeam(team);
@@ -58,6 +59,8 @@ function CreateRoom() {
                 fontWeight: "bold",
                 fontSize: "2rem",
             }}>{codeRef.current}</p>
+            <input type='checkbox' ref={checkBoxRef} name='test'/>
+            <label htmlFor='test'>테스트 게임</label>
             <button onClick={() => supabase.from('room_list').delete().eq('id', codeRef.current).then(() => {
                 supabase.removeAllChannels();
                 setPage("main");
