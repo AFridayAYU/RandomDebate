@@ -7,6 +7,9 @@ import supabase from "../supabase";
 export default function Result() {
     const { topic, team, chat, channel, code, setCode } = useContext(AppContext);
     const mounted = useRef(false);
+    const posFeedback = useRef();
+    const negFeedback = useRef();
+
     const [result, setResult] = useState(undefined);
     const [totalScore, setTotalScore] = useState([]);
     useEffect(() => {
@@ -207,27 +210,71 @@ export default function Result() {
                         </div>
                     </div>
                     <h2>찬성측 피드백</h2>
-                    <p>논리적 일관성: {result.feedback.pos[0]}</p>
-                    <p>논리적 반박력: {result.feedback.pos[1]}</p>
-                    <p>주제에 대한 이해도: {result.feedback.pos[2]}</p>
-                    <p>명확한 주제 전달: {result.feedback.pos[3]}</p>
-                    <p>표현의 설득력: {result.feedback.pos[4]}</p>
-                    <p>상대측 주장에 대한 대응력: {result.feedback.pos[5]}</p>
-                    <p>발언의 일관성: {result.feedback.pos[6]}</p>
-                    <p>태도: {result.feedback.pos[7]}</p>
-                    <p>대안 제시 능력: {result.feedback.pos[8]}</p>
-                    <p>최종 변론의 설득력: {result.feedback.pos[9]}</p>
+                    <span style={{cursor: 'pointer'}} onClick={() => {
+                        posFeedback.current.classList.toggle('hide');
+                    }}>자세히 보기</span>
+                    <div ref={posFeedback} className="hide">
+                        {chat.map((text, idx) => {
+                            if (text.split('₩', 1)[0].includes('찬성')) {
+                                return <div style={{
+                                    backgroundColor: "#d6efe7",
+                                    padding: "10px",
+                                    margin: "10px",
+                                    borderRadius: "16px",
+                                    listStyleType: "unset",
+                                }} key={idx}>
+                                    <div style={{ textAlign: `${text.split('₩', 1)[0].includes('찬성') ? "left" : "right"}`, }}>
+                                        <b>{text.split('₩', 1)[0]}</b>
+                                    </div>
+                                    <p style={{ textAlign: 'left' }}>{text.split('₩', 2)[1]}</p>
+                                </div>
+                            }
+                        }
+                        )}
+                        <p>논리적 일관성: {result.feedback.pos[0]}</p>
+                        <p>논리적 반박력: {result.feedback.pos[1]}</p>
+                        <p>주제에 대한 이해도: {result.feedback.pos[2]}</p>
+                        <p>명확한 주제 전달: {result.feedback.pos[3]}</p>
+                        <p>표현의 설득력: {result.feedback.pos[4]}</p>
+                        <p>상대측 주장에 대한 대응력: {result.feedback.pos[5]}</p>
+                        <p>발언의 일관성: {result.feedback.pos[6]}</p>
+                        <p>태도: {result.feedback.pos[7]}</p>
+                        <p>대안 제시 능력: {result.feedback.pos[8]}</p>
+                        <p>최종 변론의 설득력: {result.feedback.pos[9]}</p>
+                    </div>
                     <h2>반대측 피드백</h2>
-                    <p>논리적 일관성: {result.feedback.neg[0]}</p>
-                    <p>논리적 반박력: {result.feedback.neg[1]}</p>
-                    <p>주제에 대한 이해도: {result.feedback.neg[2]}</p>
-                    <p>명확한 주제 전달: {result.feedback.neg[3]}</p>
-                    <p>표현의 설득력: {result.feedback.neg[4]}</p>
-                    <p>상대측 주장에 대한 대응력: {result.feedback.neg[5]}</p>
-                    <p>발언의 일관성: {result.feedback.neg[6]}</p>
-                    <p>태도: {result.feedback.neg[7]}</p>
-                    <p>대안 제시 능력: {result.feedback.neg[8]}</p>
-                    <p>최종 변론의 설득력: {result.feedback.neg[9]}</p>
+                    <span style={{cursor: 'pointer'}} onClick={() => {
+                        negFeedback.current.classList.toggle('hide');
+                    }}>자세히 보기</span>
+                    <div ref={negFeedback} className="hide">
+                        {chat.map((text, idx) => {
+                            if (text.split('₩', 1)[0].includes('반대')) {
+                                return <div style={{
+                                    backgroundColor: "#f5cfd3",
+                                    padding: "10px",
+                                    margin: "10px",
+                                    borderRadius: "16px",
+                                    listStyleType: "unset",
+                                }} key={idx}>
+                                    <div style={{ textAlign: `${text.split('₩', 1)[0].includes('찬성') ? "left" : "right"}`, }}>
+                                        <b>{text.split('₩', 1)[0]}</b>
+                                    </div>
+                                    <p style={{ textAlign: 'left' }}>{text.split('₩', 2)[1]}</p>
+                                </div>
+                            }
+                        }
+                        )}
+                        <p>논리적 일관성: {result.feedback.neg[0]}</p>
+                        <p>논리적 반박력: {result.feedback.neg[1]}</p>
+                        <p>주제에 대한 이해도: {result.feedback.neg[2]}</p>
+                        <p>명확한 주제 전달: {result.feedback.neg[3]}</p>
+                        <p>표현의 설득력: {result.feedback.neg[4]}</p>
+                        <p>상대측 주장에 대한 대응력: {result.feedback.neg[5]}</p>
+                        <p>발언의 일관성: {result.feedback.neg[6]}</p>
+                        <p>태도: {result.feedback.neg[7]}</p>
+                        <p>대안 제시 능력: {result.feedback.neg[8]}</p>
+                        <p>최종 변론의 설득력: {result.feedback.neg[9]}</p>
+                    </div>
                     <button onClick={() => window.location.reload()}>메인화면으로 돌아가기</button>
                 </>
                 :
